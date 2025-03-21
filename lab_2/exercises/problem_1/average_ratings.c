@@ -10,6 +10,7 @@
    in the file. You implement the program by using shared memory method.
 */
 
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 #include <sys/shm.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #define NUM_MOVIES 1682
 #define BUFFER_SIZE \
@@ -122,7 +124,7 @@ int main(int argc, char* argv[]) {
     perror("fork failed");
     shmdt(movie_ratings);
     shmctl(shm_id, IPC_RMID, NULL);  // Clean up shared memory on error
-    kill(pid_1);  // Kill the first child if it's still running
+    kill(pid_1, SIGKILL);  // Kill the first child if it's still running
     exit(EXIT_FAILURE);
   } else if (pid_2 == 0) {
     calculate_average_ratings(file_2, shm_id);
