@@ -48,7 +48,13 @@ void get_average_ratings(const char* file_name, int shm_id) {
   while (fgets(line, BUFFER_SIZE, fp) != NULL) {
     if (sscanf(line, "%d\t%d\t%d\t%d", &user_id, &movie_id, &rating,
                &timestamp) == 4) {
+      movie_ratings->sum += rating;
+      movie_ratings->count++;
     }
-  }
 
-  int main(int argc, char* argv[]) { return 0; }
+    shmdt(movie_ratings);
+    exit(EXIT_SUCCESS);
+  }
+}
+
+int main(int argc, char* argv[]) { return 0; }
